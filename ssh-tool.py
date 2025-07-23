@@ -25,9 +25,51 @@ def get_credentials(host):
     
     password = getpass.getpass(f"Enter password for {username}@{host}")
     return username, password
+
+
+def create_connection(host, username, password):
+    # Establishes the ssh connection via paramiko SSHClient object
+    
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    
+    try:
+        print(f"\n[+] Connecting to {hostname}...")
+        client.connect(hostname=host, username=username, password=password)
+        print("✓ Connection successful!")
+        return client
+    except Exception as e:
+        print(f"✗ Connection failed: {e}")
+        return None
+    
+    
+def exec_command(ssh_client, command):
+    if not ssh_client:
+        return None
+    
+    print(f"[+] Executing command: '{command}'...")
+    stdin, stdout, stderr = ssh_client.exec_command(command)
+    
+    error = stderr.read().decode()
+    if error:
+        print(f"Error executing command: {error}")
+        return None
+    
+    return stdout.read().decode()
+
         
         
 def main():
+    # Get hostname from CLI
     host = get_hostname()
     
+    # Get host credentials 
     username, password = get_credentials(host)
+    
+    # Establish SSH connection
+    client = create_connection(host, username, password)
+    
+    # Define command and run
+    cli_command = "ip a"
+    command_output = exec_command(client ,cli_command)
+    
