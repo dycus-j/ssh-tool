@@ -26,7 +26,7 @@ A command-line tool built with Python and the Paramiko library to automate SSH c
 3.  Run the script from the command line, providing the target IP address as an argument.
 
     ```bash
-    python3 ssh_tool.py 192.168.64.5
+    python3 ssh-tool.py 192.168.64.5
     ```
 4.  You will be prompted to enter the username and password for the remote host.
 
